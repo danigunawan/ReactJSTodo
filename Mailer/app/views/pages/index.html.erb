@@ -1,0 +1,95 @@
+<% if !current_user.blank? && @gmail.logged_in? %>
+
+<ul class="nav nav-tabs" id = 'message_navigation'>
+  <li class = "active" ><a data-target='#unread_tab' data-toggle="tab" role='tab'>Unread <span class="badge"><%= @unread_count if @unread_count > 0 %></span></a></li>
+  <li><a data-target='#read_tab' data-toggle="tab" role='tab'>Read <span class="badge"><%= @read_count if @read_count > 0 %></a></li>
+</ul>
+      
+<div class = 'tab-content'>
+<div class = 'clearfix'></div>
+<br>
+  <div class="tab-pane active" id = 'unread_tab'>
+
+<% if @unread_count > 0 %>
+  <% @unread.each do |email| %>
+    <%= link_to display_message_path(id: email.uid) do%>
+    <div class = 'row message-row'>
+      <div class = 'col-md-12 col-lg-12 col-xs-12 col-sm-12'>
+      
+        <% email_sender = email.from[0].mailbox << "@" << email.from[0].host %>
+        <% email.from[0].name.blank? ? sender = email_sender :  sender = email.from[0].name %>
+        <div class = 'col-lg-3 col-md-3 col-sm-3 col-xs-3 data'>
+          <span class = 'data'><%= sender %></span>
+        </div>
+        <% subject = email.message.subject %>
+        <% if subject.include? "=?WINDOWS-1252?Q?" %>
+        <% subject = subject.gsub!("=?WINDOWS-1252?Q?","").unpack("M").first.gsub('_',' ').force_encoding('WINDOWS-1252').encode('UTF-8')%>
+        <% end %>
+        <div class = 'col-lg-7 col-md-7 col-sm-7 col-xs-7 data'>
+          <span><%= subject %></span>
+        </div>
+        <div class = 'col-lg-2 col-md-2 col-sm-2 col-xs-2 data'>
+          <span><%= DateTime.parse(email.date).strftime('%b %d %I:%M %p') %></span>
+        </div>
+      </div>
+    </div>  
+    <% end %>
+  <% end %>
+  <%= will_paginate @unread, param_name: 'unread_page',  renderer: BootstrapPagination::Rails %>
+<% else %>
+  <span>You have no unread messages.</span>
+<% end %>
+  </div>
+  <div class="tab-pane" id = 'read_tab'>
+<% if @read_count > 0 %>
+  <% @read.each do |email| %>
+    <%= link_to display_message_path(id: email.uid) do%>
+    <div class = 'row message-row'>
+      <div class = 'col-md-12 col-lg-12 col-xs-12 col-sm-12'>
+      
+        <% email_sender = email.from[0].mailbox << "@" << email.from[0].host %>
+        <% email.from[0].name.blank? ? sender = email_sender :  sender = email.from[0].name %>
+        <div class = 'col-lg-3 col-md-3 col-sm-3 col-xs-3 data'>
+          <span class = 'data'><%= sender %></span>
+        </div>
+        <% subject = email.message.subject %>
+        <% if subject.include? "=?WINDOWS-1252?Q?" %>
+        <% subject = subject.gsub!("=?WINDOWS-1252?Q?","").unpack("M").first.gsub('_',' ').force_encoding('WINDOWS-1252').encode('UTF-8')%>
+        <% end %>
+        <div class = 'col-lg-7 col-md-7 col-sm-7 col-xs-7 data'>
+          <span class = 'data'><%= subject %></span>
+        </div>
+        <div class = 'col-lg-2 col-md-2 col-sm-2 col-xs-2 data'>
+          <span><%= DateTime.parse(email.date).strftime('%b %d %I:%M %p') %></span>
+        </div>
+      </div>
+    </div>  
+    <% end %>
+  <% end %>
+    <%= will_paginate @read, param_name: 'read_page', renderer: BootstrapPagination::Rails %>
+    <% else %>
+    <span>You have not read any messages.</span>
+    <% end %>
+  </div>
+</div>
+
+<script>
+    $('#message_navigation a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    });
+
+    // store the currently selected tab in the hash value
+    $("ul.nav-tabs > li > a").on("shown.bs.tab", function (e) {
+        var id = $(e.target).attr("data-target").substr(1);
+        window.location.hash = id;
+    });
+
+    // on load of the page: switch to the currently selected tab
+    var hash = window.location.hash;
+    $('#message_navigation a[data-target="' + hash + '"]').tab('show');
+</script>
+
+<% else %>
+  
+<% end %>
