@@ -7,8 +7,10 @@ class PagesController < ApplicationController
     if !current_user.blank? && @gmail.logged_in?
       @read_count = @gmail.inbox.emails(:read).count
       @unread_count = @gmail.inbox.emails(:unread).count
+      @sent_count = @gmail.mailbox('sent').emails.count
       @read = @gmail.inbox.emails(:read).reverse!.paginate(:page => params[:read_page], :per_page => 5)
       @unread = @gmail.inbox.emails(:unread).reverse!.paginate(:page => params[:unread_page], :per_page => 5)      
+      @sent = @gmail.label('sent').emails.reverse!.paginate(:page => params[:sent_page], :per_page => 5) 
     else
       render "login", :layout => "login_layout"
     end
@@ -22,6 +24,7 @@ class PagesController < ApplicationController
   
   def display_message
     @id = params[:id]
+    @mailbox = params[:mailbox]
   end
   
   def send_message

@@ -1,5 +1,7 @@
 
-<% email = @gmail.inbox.find(uid: @id).pop %>
+<% email = @gmail.inbox.find(uid: @id).pop if @mailbox == 'inbox' %>
+<% email = @gmail.mailbox('sent').find(uid: @id).pop if @mailbox == 'sent' %>
+
 <% message = email.message.html_part.decoded.gsub!(/<img src="cid:([\w\W]+?)">/, "") ? email.message.html_part.decoded.gsub!(/<img src="cid:([\w\W]+?)">/, "") : email.message.html_part.decoded rescue email.message.decoded %>
 
 <% email.read! %>
