@@ -20,8 +20,10 @@ var TaskList = React.createClass({
       },
       url: '/tasks.json',
       success: function(res) {
+        var newTaskList = that.state.tasks
+        newTaskList.push(res)
         that.setState({
-          tasks: res, 
+          tasks: newTaskList, 
           task: {
             name: '',
             assignee: '',
@@ -29,31 +31,38 @@ var TaskList = React.createClass({
         });
       }
     });
-    
   },
   
-  handleNameChange(e){
+  handleNameChange(event){
     var newTask = this.state.task;
-    newTask.name = e.target.value
+    newTask.name = event.target.value
     this.setState({task: newTask})
   },
   
-  handleAssigneeChange(e){
+  handleAssigneeChange(event){
     var newTask = this.state.task;
-    newTask.assignee = e.target.value
+    newTask.assignee = event.target.value
     this.setState({task: newTask})
+  },
+  
+  handleDeleteTask(task) {
+      var taskList = this.state.tasks.filter(function(item){
+        return task.id != item.id
+      });
+      this.setState({tasks: taskList});
   },
 
   render() {
     var that = this;
     tasks = this.state.tasks.map(function(task){
       return (
-        <Task key={task.id} task={task} />
+        <Task key={task.id} task={task} onDeleteTask={that.handleDeleteTask} />
       );
     });
       return (
         <div>
-          <table>
+          <h3>Todo-List</h3>
+          <table class = 'table-responsive table-striped table-bordered'>
             <thead>
               <tr>
                 <th>Task</th>
@@ -64,10 +73,14 @@ var TaskList = React.createClass({
               {tasks}
             </tbody>  
           </table>
+              
           <div>
+              <button type = 'button'></button>
+              <div>
                 <input type = 'text' value={this.state.task.name} onChange={this.handleNameChange} /><br/>
                 <input type = 'text' value={this.state.task.assignee} onChange={this.handleAssigneeChange} /><br/>
-                <button onClick={this.addTask}>Hire</button>
+                <button onClick={this.addTask}>Add Task</button>
+              </div>
           </div>
         </div>
       );

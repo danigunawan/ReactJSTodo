@@ -1,7 +1,5 @@
 class TasksController < ApplicationController
 
-  respond_to :json
-
   def index
     @tasks = Task.all
   end
@@ -12,9 +10,13 @@ class TasksController < ApplicationController
   end
   
   def update
+    @task = Task.find(params[:id])
+    render json: @task if @task.update(task_params)
   end
   
   def destroy
+    @task = Task.find(params[:id])
+    render :json => {}, :status => :no_content if @task.destroy
   end
   
   private
