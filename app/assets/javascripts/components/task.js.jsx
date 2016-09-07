@@ -4,7 +4,6 @@ var Task = React.createClass({
     return {
       task: this.props.task,
       editing: false,
-      
     }
   },
 
@@ -63,7 +62,8 @@ var Task = React.createClass({
         <tr>
         <td><input type = 'text' value={this.state.task.name} onChange={this.handleNameChange} /></td>
         <td><input type = 'text' value={this.state.task.assignee} onChange={this.handleAssigneeChange} /></td>
-        <td><button onClick={this.updateTask}>Update Task</button></td>
+        <td><button onClick={this.updateTask}>Update</button></td>
+        <td><button onClick={this.deleteTask}>Remove</button></td>
         </tr>     
       );
     }

@@ -6,43 +6,15 @@ var TaskList = React.createClass({
       task: {
         name: '',
         assignee: ''
-      }
+      },
+      showForm: false,
+      formButtonName: "Display Form"
     }
   },
   
-  addTask(){
-    var that = this;
-    
-    $.ajax({
-      method: 'POST',
-      data: { 
-        task: that.state.task 
-      },
-      url: '/tasks.json',
-      success: function(res) {
-        var newTaskList = that.state.tasks
-        newTaskList.push(res)
-        that.setState({
-          tasks: newTaskList, 
-          task: {
-            name: '',
-            assignee: '',
-          }
-        });
-      }
-    });
-  },
-  
-  handleNameChange(event){
-    var newTask = this.state.task;
-    newTask.name = event.target.value
-    this.setState({task: newTask})
-  },
-  
-  handleAssigneeChange(event){
-    var newTask = this.state.task;
-    newTask.assignee = event.target.value
-    this.setState({task: newTask})
+  displayForm(){
+    this.setState({showForm: !this.state.showForm})
+    this.setState({formButtonName: "Hide Form"})
   },
   
   handleDeleteTask(task) {
@@ -51,9 +23,18 @@ var TaskList = React.createClass({
       });
       this.setState({tasks: taskList});
   },
+  
+  handleAddTask(taskList, task, showForm){
+    this.setState({tasks: taskList});
+    this.setState({task: task});
+    showForm ? this.setState({formButtonName: "Hide Form"}) : this.setState({formButtonName: "Display Form"})
+    this.setState({showForm: showForm});
+  },
 
   render() {
     var that = this;
+    this.state.showForm ? form = <FormDisplay tasks={this.state.tasks} onAddTask={that.handleAddTask} /> : form = null
+    
     tasks = this.state.tasks.map(function(task){
       return (
         <Task key={task.id} task={task} onDeleteTask={that.handleDeleteTask} />
@@ -62,7 +43,7 @@ var TaskList = React.createClass({
       return (
         <div>
           <h3>Todo-List</h3>
-          <table class = 'table-responsive table-striped table-bordered'>
+          <table className = 'highlight bordered'>
             <thead>
               <tr>
                 <th>Task</th>
@@ -73,14 +54,10 @@ var TaskList = React.createClass({
               {tasks}
             </tbody>  
           </table>
-              
+          <br/>
           <div>
-              <button type = 'button'></button>
-              <div>
-                <input type = 'text' value={this.state.task.name} onChange={this.handleNameChange} /><br/>
-                <input type = 'text' value={this.state.task.assignee} onChange={this.handleAssigneeChange} /><br/>
-                <button onClick={this.addTask}>Add Task</button>
-              </div>
+              <button onClick = {this.displayForm}>{this.state.formButtonName}</button>
+              {form}
           </div>
         </div>
       );
