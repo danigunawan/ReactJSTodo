@@ -4,6 +4,7 @@ var TaskList = React.createClass({
     return {
       tasks: this.props.tasks,
       users: this.props.users,
+      privilege: this.props.privilege,
       task: {
         name: '',
         user_id: ''
@@ -37,7 +38,7 @@ var TaskList = React.createClass({
     this.state.showForm ? form = <FormDisplay tasks={this.state.tasks} users={this.state.users} onAddTask={that.handleAddTask} /> : form = null
     tasks = this.state.tasks.map(function(task){
       return (
-        <Task key={task.id} task={task} users={that.state.users} onDeleteTask={that.handleDeleteTask} />
+        <Task key={task.id} task={task} privilege={that.state.privilege} users={that.state.users} onDeleteTask={that.handleDeleteTask} />
       );
     });
       return (

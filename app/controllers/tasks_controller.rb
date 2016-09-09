@@ -1,5 +1,7 @@
 class TasksController < ApplicationController
   
+  before_action :set_privileges
+  
   def index
     @tasks = Task.all if current_user.role       
     @tasks = Task.where(user_id: current_user.id) unless current_user.role
@@ -26,6 +28,12 @@ class TasksController < ApplicationController
   
   def task_params
     params.require(:task).permit(:name, :user_id)
+  end
+  
+  def set_privileges
+    if user_signed_in?
+      @privilege = current_user.role
+    end
   end
   
 end

@@ -4,6 +4,7 @@ var Task = React.createClass({
     return {
       task: this.props.task,
       users: this.props.users,
+      privilege: this.props.privilege,
       editing: false,
     }
   },
@@ -96,16 +97,28 @@ var Task = React.createClass({
       );
     }
     else{
-      display = (
-      <div className='row'>
-        <div className='col s4 l4 m4'>{this.state.task.name}</div>
-        <div className='col s4 l4 m4'>{user.name}</div>
-        <div className='col s4 l4 m4'>
-        <button className='btn waves-effect waves-light' onClick={this.changeEditing}>Edit</button>
-        <button className='btn waves-effect red lighten-1' onClick={this.deleteTask}>Remove</button>
-        </div>
-      </div>     
-      );
+      if(that.state.privilege){
+        display = (
+        <div className='row'>
+          <div className='col s4 l4 m4'>{this.state.task.name}</div>
+          <div className='col s4 l4 m4'>{user.name}</div>
+          <div className='col s4 l4 m4'>
+          <button className='btn waves-effect waves-light' onClick={this.changeEditing}>Edit</button>  
+          <button className='btn waves-effect red lighten-1' onClick={this.deleteTask}>Remove</button>
+          </div>
+        </div>     
+        );
+      }else{
+        display = (
+        <div className='row'>
+          <div className='col s4 l4 m4'>{this.state.task.name}</div>
+          <div className='col s4 l4 m4'>{user.name}</div>
+          <div className='col s4 l4 m4'>
+          <button className='btn waves-effect red lighten-1' onClick={this.deleteTask}>Remove</button>
+          </div>
+        </div>     
+        );
+      }
     }
     return display;
   }
