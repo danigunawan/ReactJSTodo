@@ -43,19 +43,20 @@ var TaskList = React.createClass({
       return (
         <div>        
           <h3>Todo-List</h3>
-          <table className = 'highlight bordered'>
-            <thead>
-              <tr>
-                <th>Task</th>
-                <th>Assignee</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tasks}
-            </tbody>  
-          </table>
-          <br/>
-          <div>
+         <div className='row'>
+           <div className='col s4 l4 m4'>
+             Task
+           </div>
+           <div className='col s4 l4 m4'>
+             Task
+           </div>
+           <div className='col s4 l4 m4'>
+             Actions
+           </div>        
+         </div>
+        
+            {tasks}
+          <div className='row'>
               <button className="btn waves-effect waves-light" onClick = {this.displayForm}>{this.state.formButtonName}</button>
               {form}
           </div>

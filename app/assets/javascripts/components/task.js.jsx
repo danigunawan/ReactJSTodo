@@ -67,38 +67,44 @@ var Task = React.createClass({
       if (that.state.task.user_id == val.id){
         user = val
       }
-      return(<option key = {index} value = {val.id}>{val.name}</option>)
+      return(<option key = {index} value = {val.id}>{val.name}</option>)  
     });
     
     if(this.state.editing){
       display = (
-        <tr>
-        <td><input type = 'text' value={this.state.task.name} onChange={this.handleNameChange} /></td>
-        <td>
-        <div className='input-field'>
-          <label>Materialize Select</label>
-          <select>
-            {options}
-          </select>
-        </div>
-        </td>
-        <td>
-        <button className='btn waves-effect waves-light' onClick={this.updateTask}>Update</button>
-        <button className='btn waves-effect red lighten-1' onClick={this.deleteTask}>Remove</button>
-        </td>
-        </tr>     
+        <div className='row'>
+          <div className='col s4 l4 m4'>
+            <div className = 'input-field'>
+              <input type = 'text' value={this.state.task.name} onChange={this.handleNameChange} />
+            </div>
+          </div>
+          <div className='col s4 l4 m4'>
+            <div className='input-field'>
+              <select id = 'user_id' className='browser-default' onChange={this.handleAssigneeChange}>
+                <option value="" disabled selected>Choose your option</option>
+                {options}
+              </select>
+            </div>
+          </div>
+          <div className='col s4 l4 m4'>
+            <div className='input-field'>
+              <button className='btn waves-effect waves-light' onClick={this.updateTask}>Update</button>
+              <button className='btn waves-effect red lighten-1' onClick={this.deleteTask}>Remove</button>
+            </div>
+          </div>
+        </div> 
       );
     }
     else{
       display = (
-      <tr>
-        <td>{this.state.task.name}</td>
-        <td>{user.name}</td>
-        <td>
+      <div className='row'>
+        <div className='col s4 l4 m4'>{this.state.task.name}</div>
+        <div className='col s4 l4 m4'>{user.name}</div>
+        <div className='col s4 l4 m4'>
         <button className='btn waves-effect waves-light' onClick={this.changeEditing}>Edit</button>
         <button className='btn waves-effect red lighten-1' onClick={this.deleteTask}>Remove</button>
-        </td>
-      </tr>     
+        </div>
+      </div>     
       );
     }
     return display;

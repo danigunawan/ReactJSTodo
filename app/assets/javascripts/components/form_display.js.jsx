@@ -50,11 +50,24 @@ var FormDisplay = React.createClass({
   },
   
   render(){
+    var options = this.state.users.map(function(val, index){
+      return(<option key = {index} value = {val.id}>{val.name}</option>)
+    });
+    
     return(
       <div>
-        <input type = 'text' value={this.state.task.name} onChange={this.handleNameChange} /><br/>
-        <input type = 'text' value={this.state.task.assignee} onChange={this.handleAssigneeChange} /><br/>
-        <button className="btn waves-effect waves-light" onClick={this.addTask}>Add Task</button>
+        <div className = 'input-field'>
+          <input type = 'text' value={this.state.task.name} onChange={this.handleNameChange} />
+        </div>
+        <div className='input-field'>
+          <select id = 'user_id' className='browser-default' onChange={this.handleAssigneeChange} required>
+            <option value="" disabled selected>Choose your option</option>
+            {options}
+          </select>
+        </div>
+        <div className='input-field'>
+            <button className="btn waves-effect waves-light" onClick={this.addTask}>Add Task</button>
+        </div>
       </div>
     );
   }

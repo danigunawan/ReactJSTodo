@@ -2,6 +2,7 @@ class TasksController < ApplicationController
   
   def index
     @tasks = Task.all if current_user.role       
+    @tasks = Task.where(user_id: current_user.id) unless current_user.role
     @users = User.all
   end
   
@@ -11,6 +12,7 @@ class TasksController < ApplicationController
   end
   
   def update
+    puts "#{task_params.inspect}"
     @task = Task.find(params[:id])
     render json: @task if @task.update(task_params)
   end
