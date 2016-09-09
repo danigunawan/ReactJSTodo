@@ -2,9 +2,10 @@ var FormDisplay = React.createClass({
   getInitialState(){
     return {
       tasks: this.props.tasks,
+      users: this.props.users,
       task: {
         name: '',
-        assignee: ''
+        user_id: ''
       },
       showForm: true
     }
@@ -18,7 +19,7 @@ var FormDisplay = React.createClass({
   
   handleAssigneeChange(event){
     var newTask = this.state.task;
-    newTask.assignee = event.target.value
+    newTask.user_id = event.target.value
     this.setState({task: newTask})
   },
   
@@ -38,11 +39,12 @@ var FormDisplay = React.createClass({
           tasks: newTaskList, 
           task: {
             name: '',
-            assignee: '',
+            user_id: '',
           },
           showForm: false
         });
         that.props.onAddTask(newTaskList, that.state.task, that.state.showForm)
+        Materialize.toast('Task Added!', 4000)
       }
     });
   },
@@ -52,7 +54,7 @@ var FormDisplay = React.createClass({
       <div>
         <input type = 'text' value={this.state.task.name} onChange={this.handleNameChange} /><br/>
         <input type = 'text' value={this.state.task.assignee} onChange={this.handleAssigneeChange} /><br/>
-        <button onClick={this.addTask}>Add Task</button>
+        <button className="btn waves-effect waves-light" onClick={this.addTask}>Add Task</button>
       </div>
     );
   }

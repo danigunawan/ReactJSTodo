@@ -1,7 +1,8 @@
 class TasksController < ApplicationController
-
+  
   def index
-    @tasks = Task.all
+    @tasks = Task.all if current_user.role       
+    @users = User.all
   end
   
   def create
@@ -22,7 +23,7 @@ class TasksController < ApplicationController
   private
   
   def task_params
-    params.require(:task).permit(:name, :assignee)
+    params.require(:task).permit(:name, :user_id)
   end
   
 end

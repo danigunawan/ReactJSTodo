@@ -3,9 +3,10 @@ var TaskList = React.createClass({
   getInitialState(){
     return {
       tasks: this.props.tasks,
+      users: this.props.users,
       task: {
         name: '',
-        assignee: ''
+        user_id: ''
       },
       showForm: false,
       formButtonName: "Display Form"
@@ -33,15 +34,14 @@ var TaskList = React.createClass({
 
   render() {
     var that = this;
-    this.state.showForm ? form = <FormDisplay tasks={this.state.tasks} onAddTask={that.handleAddTask} /> : form = null
-    
+    this.state.showForm ? form = <FormDisplay tasks={this.state.tasks} users={this.state.users} onAddTask={that.handleAddTask} /> : form = null
     tasks = this.state.tasks.map(function(task){
       return (
-        <Task key={task.id} task={task} onDeleteTask={that.handleDeleteTask} />
+        <Task key={task.id} task={task} users={that.state.users} onDeleteTask={that.handleDeleteTask} />
       );
     });
       return (
-        <div>
+        <div>        
           <h3>Todo-List</h3>
           <table className = 'highlight bordered'>
             <thead>
@@ -56,7 +56,7 @@ var TaskList = React.createClass({
           </table>
           <br/>
           <div>
-              <button onClick = {this.displayForm}>{this.state.formButtonName}</button>
+              <button className="btn waves-effect waves-light" onClick = {this.displayForm}>{this.state.formButtonName}</button>
               {form}
           </div>
         </div>

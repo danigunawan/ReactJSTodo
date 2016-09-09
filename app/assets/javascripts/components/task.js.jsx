@@ -3,6 +3,7 @@ var Task = React.createClass({
   getInitialState() {
     return {
       task: this.props.task,
+      users: this.props.users,
       editing: false,
     }
   },
@@ -21,6 +22,7 @@ var Task = React.createClass({
           task: res,
           editing: false
         });
+        Materialize.toast('Task Updated!', 4000)
       }
     });
   },
@@ -34,6 +36,7 @@ var Task = React.createClass({
         url: '/tasks/' + that.state.task.id + '.json',
         success: function(res) {
           that.props.onDeleteTask(that.state.task)
+          Materialize.toast('Task Deleted!', 4000)
         }
       });
     }
@@ -47,7 +50,7 @@ var Task = React.createClass({
   
   handleAssigneeChange(event){
     var newTask = this.state.task
-    newTask.assignee = event.target.value
+    newTask.user_id = event.target.value
     this.setState({task: newTask})
   },
   
@@ -57,13 +60,32 @@ var Task = React.createClass({
   },
   
   render() {
+    var that = this
+    var user = ''
+    
+    var options = this.state.users.map(function(val, index){
+      if (that.state.task.user_id == val.id){
+        user = val
+      }
+      return(<option key = {index} value = {val.id}>{val.name}</option>)
+    });
+    
     if(this.state.editing){
       display = (
         <tr>
         <td><input type = 'text' value={this.state.task.name} onChange={this.handleNameChange} /></td>
-        <td><input type = 'text' value={this.state.task.assignee} onChange={this.handleAssigneeChange} /></td>
-        <td><button onClick={this.updateTask}>Update</button></td>
-        <td><button onClick={this.deleteTask}>Remove</button></td>
+        <td>
+        <div className='input-field'>
+          <label>Materialize Select</label>
+          <select>
+            {options}
+          </select>
+        </div>
+        </td>
+        <td>
+        <button className='btn waves-effect waves-light' onClick={this.updateTask}>Update</button>
+        <button className='btn waves-effect red lighten-1' onClick={this.deleteTask}>Remove</button>
+        </td>
         </tr>     
       );
     }
@@ -71,9 +93,11 @@ var Task = React.createClass({
       display = (
       <tr>
         <td>{this.state.task.name}</td>
-        <td>{this.state.task.assignee}</td>
-        <td><button onClick={this.changeEditing}>Edit</button></td>
-        <td><button onClick={this.deleteTask}>Remove</button></td>
+        <td>{user.name}</td>
+        <td>
+        <button className='btn waves-effect waves-light' onClick={this.changeEditing}>Edit</button>
+        <button className='btn waves-effect red lighten-1' onClick={this.deleteTask}>Remove</button>
+        </td>
       </tr>     
       );
     }
